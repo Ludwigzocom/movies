@@ -7,6 +7,7 @@ const listBtn = document.querySelector("#listBtn");
 const removeLastBtn = document.querySelector("#removeLastBtn");
 const titlesBtn = document.querySelector("#titlesBtn");
 const clearBtn = document.querySelector("#clearBtn");
+const ratingInput = document.querySelector("#rating");
 
 const saved = localStorage.getItem("movies");
 const movies = JSON.parse(saved) || [];
@@ -22,6 +23,8 @@ form.addEventListener("submit", function (event) {
   const title = titleInput.value.trim();
   const director = directorInput.value.trim();
   const review = reviewInput.value.trim();
+  const ratingText = ratingInput.value.trim();
+  const rating = Number(ratingText);
 
   if (title === "") {
     errorText.textContent = "Please enter a title";
@@ -53,6 +56,16 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
+  if (ratingText === "" || isNaN(rating)) {
+    errorText.textContent = "Please enter a number";
+    return;
+  }
+
+  if (rating < 1 || rating > 10) {
+    errorText.textContent = "Rating must be between 1 and 10";
+    return;
+  }
+
   for (let i = 0; i < movies.length; i++) {
     if (movies[i].title.toLowerCase() === title.toLowerCase()) {
       errorText.textContent = "This movie is already reviewed";
@@ -67,6 +80,7 @@ form.addEventListener("submit", function (event) {
     title: title,
     director: director,
     review: review,
+    rating: rating,
   };
 
   movies.push(newMovie);
@@ -75,6 +89,7 @@ form.addEventListener("submit", function (event) {
   titleInput.value = "";
   directorInput.value = "";
   reviewInput.value = "";
+  ratingInput.value = "";
 });
 
 listBtn.addEventListener("click", function () {
